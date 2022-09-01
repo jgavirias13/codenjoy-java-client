@@ -24,6 +24,8 @@ package com.codenjoy.dojo.games.mollymage;
 
 import com.codenjoy.dojo.client.Solver;
 import com.codenjoy.dojo.services.Dice;
+import com.codenjoy.dojo.services.Point;
+import com.codenjoy.dojo.services.PointImpl;
 
 /**
  * Author: your name
@@ -47,8 +49,70 @@ public class YourSolver implements Solver<Board> {
         this.board = board;
         if (board.isGameOver()) return "";
 
-        // TODO put your logic here
+        
 
         return Command.DROP_POTION;
+    }
+
+    private boolean isSafePoint(int x, int y, int pasos) {
+        int alcancePosion = Properties.POSION_ALCANCE;
+
+        for (int i=x; i<=x+alcancePosion; i++) {
+            Point pointObj = new PointImpl(i, y);
+            Element currentElement = board.getAt(pointObj);
+            if (!board.isPotionAt(pointObj) && currentElement.ch() != ' ') {
+                break;
+            }
+            if (board.isPotionAt(pointObj)) {
+                int toExplote = Character.getNumericValue(currentElement.ch());
+                if (toExplote >= pasos) {
+                    return false;
+                }
+            }
+        }
+
+        for (int i=x; i>=0 && i>=x-alcancePosion; i--) {
+            Point pointObj = new PointImpl(i, y);
+            Element currentElement = board.getAt(pointObj);
+            if (!board.isPotionAt(pointObj) && currentElement.ch() != ' ') {
+                break;
+            }
+            if (board.isPotionAt(pointObj)) {
+                int toExplote = Character.getNumericValue(currentElement.ch());
+                if (toExplote >= pasos) {
+                    return false;
+                }
+            }
+        }
+
+        for (int i=y; i<=y+alcancePosion; i++) {
+            Point pointObj = new PointImpl(x, i);
+            Element currentElement = board.getAt(pointObj);
+            if (!board.isPotionAt(pointObj) && currentElement.ch() != ' ') {
+                break;
+            }
+            if (board.isPotionAt(pointObj)) {
+                int toExplote = Character.getNumericValue(currentElement.ch());
+                if (toExplote >= pasos) {
+                    return false;
+                }
+            }
+        }
+
+        for (int i=y; i >= 0 && i>=y-alcancePosion; i--) {
+            Point pointObj = new PointImpl(x, i);
+            Element currentElement = board.getAt(pointObj);
+            if (!board.isPotionAt(pointObj) && currentElement.ch() != ' ') {
+                break;
+            }
+            if (board.isPotionAt(pointObj)) {
+                int toExplote = Character.getNumericValue(currentElement.ch());
+                if (toExplote >= pasos) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }
